@@ -1,54 +1,63 @@
-const passport = require('passport');
-const refresh = require('passport-oauth2-refresh');
-const axios = require('axios');
-const { Strategy: InstagramStrategy } = require('passport-instagram');
-const { Strategy: LocalStrategy } = require('passport-local');
-const { Strategy: FacebookStrategy } = require('passport-facebook');
-const { Strategy: SnapchatStrategy } = require('passport-snapchat');
-const { Strategy: TwitterStrategy } = require('passport-twitter');
-const { Strategy: TwitchStrategy } = require('passport-twitch-new');
-const { Strategy: GitHubStrategy } = require('passport-github2');
-const { OAuth2Strategy: GoogleStrategy } = require('passport-google-oauth');
-const { Strategy: LinkedInStrategy } = require('passport-linkedin-oauth2');
-const { Strategy: OpenIDStrategy } = require('passport-openid');
-const { OAuthStrategy } = require('passport-oauth');
-const { OAuth2Strategy } = require('passport-oauth');
-const _ = require('lodash');
-const moment = require('moment');
+const passport = require('passport')
+const refresh = require('passport-oauth2-refresh')
+const axios = require('axios')
+const { Strategy: InstagramStrategy } = require('passport-instagram')
+const { Strategy: LocalStrategy } = require('passport-local')
+const { Strategy: FacebookStrategy } = require('passport-facebook')
+const { Strategy: SnapchatStrategy } = require('passport-snapchat')
+const { Strategy: TwitterStrategy } = require('passport-twitter')
+const { Strategy: TwitchStrategy } = require('passport-twitch-new')
+const { Strategy: GitHubStrategy } = require('passport-github2')
+const { OAuth2Strategy: GoogleStrategy } = require('passport-google-oauth')
+const { Strategy: LinkedInStrategy } = require('passport-linkedin-oauth2')
+const { Strategy: OpenIDStrategy } = require('passport-openid')
+const { OAuthStrategy } = require('passport-oauth')
+const { OAuth2Strategy } = require('passport-oauth')
+const _ = require('lodash')
+const moment = require('moment')
 
-const User = require('../models/User');
+const User = require('../models/User')
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
+   done(null, user.id)
+})
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
+   User.findById(id, (err, user) => {
+      done(err, user)
+   })
+})
 
 /**
  * Sign in using Email and Password.
  */
-passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.findOne({ email: email.toLowerCase() }, (err, user) => {
-    if (err) { return done(err); }
-    if (!user) {
-      return done(null, false, { msg: `Email ${email} not found.` });
-    }
-    if (!user.password) {
-      return done(null, false, { msg: 'Your account was registered using a sign-in provider. To enable password login, sign in using a provider, and then set a password under your user profile.' });
-    }
-    user.comparePassword(password, (err, isMatch) => {
-      if (err) { return done(err); }
-      if (isMatch) {
-        return done(null, user);
-      }
-      return done(null, false, { msg: 'Invalid email or password.' });
-    });
-  });
-}));
+passport.use(
+   new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+      User.findOne({ email: email.toLowerCase() }, (err, user) => {
+         if (err) {
+            return done(err)
+         }
+         if (!user) {
+            return done(null, false, { msg: `Email ${email} not found.` })
+         }
+         if (!user.password) {
+            return done(null, false, {
+               msg:
+                  'Your account was registered using a sign-in provider. To enable password login, sign in using a provider, and then set a password under your user profile.',
+            })
+         }
+         user.comparePassword(password, (err, isMatch) => {
+            if (err) {
+               return done(err)
+            }
+            if (isMatch) {
+               return done(null, user)
+            }
+            return done(null, false, { msg: 'Invalid email or password.' })
+         })
+      })
+   }),
+)
 
 /**
  * OAuth Strategy Overview
@@ -68,6 +77,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
 /**
  * Sign in with Snapchat.
  */
+/*
 passport.use(new SnapchatStrategy({
   clientID: process.env.SNAPCHAT_ID,
   clientSecret: process.env.SNAPCHAT_SECRET,
@@ -117,10 +127,11 @@ passport.use(new SnapchatStrategy({
     });
   }
 }));
-
+*/
 /**
  * Sign in with Facebook.
  */
+/*
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_ID,
   clientSecret: process.env.FACEBOOK_SECRET,
@@ -177,10 +188,11 @@ passport.use(new FacebookStrategy({
     });
   }
 }));
-
+*/
 /**
  * Sign in with GitHub.
  */
+/*
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_ID,
   clientSecret: process.env.GITHUB_SECRET,
@@ -260,10 +272,11 @@ passport.use(new GitHubStrategy({
     });
   }
 }));
-
+*/
 /**
  * Sign in with Twitter.
  */
+/*
 passport.use(new TwitterStrategy({
   consumerKey: process.env.TWITTER_KEY,
   consumerSecret: process.env.TWITTER_SECRET,
@@ -314,10 +327,11 @@ passport.use(new TwitterStrategy({
     });
   }
 }));
-
+*/
 /**
  * Sign in with Google.
  */
+/*
 const googleStrategyConfig = new GoogleStrategy({
   clientID: process.env.GOOGLE_ID,
   clientSecret: process.env.GOOGLE_SECRET,
@@ -384,10 +398,11 @@ const googleStrategyConfig = new GoogleStrategy({
 });
 passport.use('google', googleStrategyConfig);
 refresh.use('google', googleStrategyConfig);
-
+*/
 /**
  * Sign in with LinkedIn.
  */
+/*
 passport.use(new LinkedInStrategy({
   clientID: process.env.LINKEDIN_ID,
   clientSecret: process.env.LINKEDIN_SECRET,
@@ -442,10 +457,11 @@ passport.use(new LinkedInStrategy({
     });
   }
 }));
-
+*/
 /**
  * Sign in with Instagram.
  */
+/*
 passport.use(new InstagramStrategy({
   clientID: process.env.INSTAGRAM_ID,
   clientSecret: process.env.INSTAGRAM_SECRET,
@@ -495,10 +511,11 @@ passport.use(new InstagramStrategy({
     });
   }
 }));
-
+*/
 /**
  * Twitch API OAuth.
  */
+/*
 const twitchStrategyConfig = new TwitchStrategy({
   clientID: process.env.TWITCH_CLIENT_ID,
   clientSecret: process.env.TWITCH_CLIENT_SECRET,
@@ -566,10 +583,11 @@ const twitchStrategyConfig = new TwitchStrategy({
 });
 passport.use('twitch', twitchStrategyConfig);
 refresh.use('twitch', twitchStrategyConfig);
-
+*/
 /**
  * Tumblr API OAuth.
  */
+/*
 passport.use('tumblr', new OAuthStrategy({
   requestTokenURL: 'https://www.tumblr.com/oauth/request_token',
   accessTokenURL: 'https://www.tumblr.com/oauth/access_token',
@@ -588,10 +606,11 @@ passport.use('tumblr', new OAuthStrategy({
     });
   });
 }));
-
+*/
 /**
  * Foursquare API OAuth.
  */
+/*
 passport.use('foursquare', new OAuth2Strategy({
   authorizationURL: 'https://foursquare.com/oauth2/authorize',
   tokenURL: 'https://foursquare.com/oauth2/access_token',
@@ -609,10 +628,11 @@ passport.use('foursquare', new OAuth2Strategy({
     });
   });
 }));
-
+*/
 /**
  * Steam API OpenID.
  */
+/*
 passport.use(new OpenIDStrategy({
   apiKey: process.env.STEAM_KEY,
   providerURL: 'http://steamcommunity.com/openid',
@@ -669,10 +689,11 @@ passport.use(new OpenIDStrategy({
       });
   }
 }));
-
+*/
 /**
  * Pinterest API OAuth.
  */
+/*
 passport.use('pinterest', new OAuth2Strategy({
   authorizationURL: 'https://api.pinterest.com/oauth/',
   tokenURL: 'https://api.pinterest.com/v1/oauth/token',
@@ -690,10 +711,11 @@ passport.use('pinterest', new OAuth2Strategy({
     });
   });
 }));
-
+*/
 /**
  * Intuit/QuickBooks API OAuth.
  */
+/*
 const quickbooksStrategyConfig = new OAuth2Strategy({
   authorizationURL: 'https://appcenter.intuit.com/connect/oauth2',
   tokenURL: 'https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer',
@@ -734,62 +756,79 @@ const quickbooksStrategyConfig = new OAuth2Strategy({
 });
 passport.use('quickbooks', quickbooksStrategyConfig);
 refresh.use('quickbooks', quickbooksStrategyConfig);
-
+*/
 /**
  * Login Required middleware.
  */
 exports.isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
-};
+   if (req.isAuthenticated()) {
+      return next()
+   }
+   res.redirect('/login')
+}
 
 /**
  * Authorization Required middleware.
  */
 exports.isAuthorized = (req, res, next) => {
-  const provider = req.path.split('/')[2];
-  const token = req.user.tokens.find((token) => token.kind === provider);
-  if (token) {
-    // Is there an access token expiration and access token expired?
-    // Yes: Is there a refresh token?
-    //     Yes: Does it have expiration and if so is it expired?
-    //       Yes, Quickbooks - We got nothing, redirect to res.redirect(`/auth/${provider}`);
-    //       No, Quickbooks and Google- refresh token and save, and then go to next();
-    //    No:  Treat it like we got nothing, redirect to res.redirect(`/auth/${provider}`);
-    // No: we are good, go to next():
-    if (token.accessTokenExpires && moment(token.accessTokenExpires).isBefore(moment().subtract(1, 'minutes'))) {
-      if (token.refreshToken) {
-        if (token.refreshTokenExpires && moment(token.refreshTokenExpires).isBefore(moment().subtract(1, 'minutes'))) {
-          res.redirect(`/auth/${provider}`);
-        } else {
-          refresh.requestNewAccessToken(`${provider}`, token.refreshToken, (err, accessToken, refreshToken, params) => {
-            User.findById(req.user.id, (err, user) => {
-              user.tokens.some((tokenObject) => {
-                if (tokenObject.kind === provider) {
-                  tokenObject.accessToken = accessToken;
-                  if (params.expires_in) tokenObject.accessTokenExpires = moment().add(params.expires_in, 'seconds').format();
-                  return true;
-                }
-                return false;
-              });
-              req.user = user;
-              user.markModified('tokens');
-              user.save((err) => {
-                if (err) console.log(err);
-                next();
-              });
-            });
-          });
-        }
+   const provider = req.path.split('/')[2]
+   const token = req.user.tokens.find(token => token.kind === provider)
+   if (token) {
+      // Is there an access token expiration and access token expired?
+      // Yes: Is there a refresh token?
+      //     Yes: Does it have expiration and if so is it expired?
+      //       Yes, Quickbooks - We got nothing, redirect to res.redirect(`/auth/${provider}`);
+      //       No, Quickbooks and Google- refresh token and save, and then go to next();
+      //    No:  Treat it like we got nothing, redirect to res.redirect(`/auth/${provider}`);
+      // No: we are good, go to next():
+      if (
+         token.accessTokenExpires &&
+         moment(token.accessTokenExpires).isBefore(
+            moment().subtract(1, 'minutes'),
+         )
+      ) {
+         if (token.refreshToken) {
+            if (
+               token.refreshTokenExpires &&
+               moment(token.refreshTokenExpires).isBefore(
+                  moment().subtract(1, 'minutes'),
+               )
+            ) {
+               res.redirect(`/auth/${provider}`)
+            } else {
+               refresh.requestNewAccessToken(
+                  `${provider}`,
+                  token.refreshToken,
+                  (err, accessToken, refreshToken, params) => {
+                     User.findById(req.user.id, (err, user) => {
+                        user.tokens.some(tokenObject => {
+                           if (tokenObject.kind === provider) {
+                              tokenObject.accessToken = accessToken
+                              if (params.expires_in)
+                                 tokenObject.accessTokenExpires = moment()
+                                    .add(params.expires_in, 'seconds')
+                                    .format()
+                              return true
+                           }
+                           return false
+                        })
+                        req.user = user
+                        user.markModified('tokens')
+                        user.save(err => {
+                           if (err) console.log(err)
+                           next()
+                        })
+                     })
+                  },
+               )
+            }
+         } else {
+            res.redirect(`/auth/${provider}`)
+         }
       } else {
-        res.redirect(`/auth/${provider}`);
+         next()
       }
-    } else {
-      next();
-    }
-  } else {
-    res.redirect(`/auth/${provider}`);
-  }
-};
+   } else {
+      res.redirect(`/auth/${provider}`)
+   }
+}
